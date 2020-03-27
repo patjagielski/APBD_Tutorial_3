@@ -5,5 +5,9 @@
     <RootNamespace>Tutorial_3._1</RootNamespace>
   </PropertyGroup>
 
+  <ItemGroup>
+    <PackageReference Include="System.Data.SqlClient" Version="4.8.1" />
+  </ItemGroup>
+
 
 </Project>

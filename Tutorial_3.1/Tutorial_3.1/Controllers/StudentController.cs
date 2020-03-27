@@ -22,24 +22,25 @@ namespace Tutorial_3._1.Controllers
         public IActionResult GetStudent(string id)
         {
             string studies = "";
-            using(var sqlConnection = new SqlConnection(@"Data Source=db-mssql;Initial Catalog=s19696;Integrated Security=True"))
+            using (var sqlConnection = new SqlConnection(@"Data Source=db-mssql;Initial Catalog=s19696;Integrated Security=True"))
             {
-                using(var command = new SqlCommand())
+                using (var command = new SqlCommand())
                 {
                     command.Connection = sqlConnection;
-                    command.CommandText = "select a.IndexNumber,b.semester,c.Name" +
+                    string query = "select x.IndexNumber,y.semester,w.Name" +
                                 " from Student a join Enrollment b" +
-                                " on a.IdEnrollment = b.IdEnrollment join Studies C" +
-                                $" on C.idStudy = b.IdStudy where a.IndexNumber ='{id}';";
-                    con.CommandText = (query);
-                    client.Open();
-                    var dr = con.ExecuteReader();
+                                " on x.IdEnrollment = y.IdEnrollment join Studies W" +
+                                $" on W.idStudy = y.IdStudy where x.IndexNumber ='{id}';";
+                    command.CommandText = (query);
+                    sqlConnection.Open();
+                    var dr = command.ExecuteReader();
                     while (dr.Read())
                     {
                         studies = studies + $"Student:{dr["IndexNumber"]} Semester:{dr["Semester"].ToString()} Studies:{dr["Name"]} \n";
                     }
+                }
+                return Ok();
             }
-            return Ok();
         }
         [HttpGet("{id}")]
         public IActionResult GetStudent(int id)
