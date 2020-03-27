@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data.SqlClient;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -18,24 +19,54 @@ namespace Tutorial_3._1.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetStudent(string orderBy)
+        public IActionResult GetStudent(string id)
         {
-
-            return Ok(_dbService.GetStudents());
+            string studies = "";
+            using(var sqlConnection = new SqlConnection(@"Data Source=db-mssql;Initial Catalog=s19696;Integrated Security=True"))
+            {
+                using(var command = new SqlCommand())
+                {
+                    command.Connection = sqlConnection;
+                    command.CommandText = "select a.IndexNumber,b.semester,c.Name" +
+                                " from Student a join Enrollment b" +
+                                " on a.IdEnrollment = b.IdEnrollment join Studies C" +
+                                $" on C.idStudy = b.IdStudy where a.IndexNumber ='{id}';";
+                    con.CommandText = (query);
+                    client.Open();
+                    var dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        studies = studies + $"Student:{dr["IndexNumber"]} Semester:{dr["Semester"].ToString()} Studies:{dr["Name"]} \n";
+                    }
+            }
+            return Ok();
         }
-
         [HttpGet("{id}")]
         public IActionResult GetStudent(int id)
         {
-            if (id == 1)
+            string studies = "";
+            using (var client = new SqlConnection(@"Data Source=db-mssql;Initial Catalog=s19696;Integrated Security=True"))
             {
-                return Ok("Kowalski");
+                using (var con = new SqlCommand())
+                {
+                    con.Connection = client;
+                    string query = "select a.IndexNumber,b.semester,c.Name" +
+                                " from Student a join Enrollment b" +
+                                " on a.IdEnrollment = b.IdEnrollment join Studies C" +
+                                $" on C.idStudy = b.IdStudy where a.IndexNumber ='{id}';";
+
+                    con.CommandText = (query);
+                    client.Open();
+                    var dr = con.ExecuteReader();
+                    while (dr.Read())
+                    {
+                        studies = studies + $"Student:{dr["IndexNumber"]} Semester:{dr["Semester"].ToString()} Studies:{dr["Name"]} \n";
+                    }
+
+                }
+
             }
-            else if (id == 2)
-            {
-                return Ok("Malewski");
-            }
-            return NotFound("Nothing found");
+            return Ok(studies);
 
         }
 
