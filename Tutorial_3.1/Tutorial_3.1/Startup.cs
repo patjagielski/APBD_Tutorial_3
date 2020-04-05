@@ -10,7 +10,8 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Tutorial_3._1.DAL;
+using Tutorial_3._1.Controllers;
+using Tutorial_3._1.Models.Services;
 
 namespace Tutorial_3._1
 {
@@ -26,7 +27,7 @@ namespace Tutorial_3._1
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddSingleton<IDbService, MockDbService>();
+            services.AddTransient<IStudentsDbService, DBController>();    
             services.AddControllers();
         }
 
